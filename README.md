@@ -1,4 +1,4 @@
-# Maestro: A Guide for Beginners
+# Maestro
 
 Welcome to **Maestro**! If you use AI agents (like Cursor, Claude, or Gemini) to write code and want them to be *smarter* and *faster*, you are in the right place.
 
@@ -8,7 +8,7 @@ This saves tokens (which saves money and memory) and keeps the AI focused.
 
 ---
 
-## 🗺️ How it Works (The Folder Structure)
+## 🗺️ How it Works
 
 For Maestro to work, you need a main folder where you keep all your "Skill Bundles". A Skill Bundle is just a folder containing a group of skills for a specific topic, like Angular or Python. The bundles can have the name you want to give them, the main folder name is also up to you.
 
