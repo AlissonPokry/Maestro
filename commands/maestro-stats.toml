@@ -1,0 +1,4 @@
+﻿---
+description = "Show Maestro's selected bundle folder and Known Bundles table"
+prompt = "Use Maestro from ./maestro/SKILL.md. Run `python ./maestro/scripts/maestro_stats.py --skill-file ./maestro/SKILL.md` and return the selected bundle-folder line plus the Known Bundles table. Do not estimate token savings."
+---

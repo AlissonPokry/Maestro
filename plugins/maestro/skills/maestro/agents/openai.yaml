@@ -1,0 +1,5 @@
+﻿interface:
+  display_name: "Maestro"
+  short_description: "Orchestrate saved project skill bundles"
+  default_prompt: "Use $maestro to route this task using the saved skill-bundle-folder."
+

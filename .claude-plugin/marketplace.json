@@ -1,0 +1,16 @@
+﻿{
+    "$schema":  "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name":  "maestro",
+    "description":  "Skill-bundle orchestration for Claude Code with saved bundle-folder switching.",
+    "owner":  {
+                  "name":  "Alisson"
+              },
+    "plugins":  [
+                    {
+                        "name":  "maestro",
+                        "description":  "Route tasks to the right project skill bundle and switch the saved bundle folder.",
+                        "source":  "./",
+                        "category":  "productivity"
+                    }
+                ]
+}

@@ -1,0 +1,33 @@
+﻿{
+    "name":  "maestro",
+    "version":  "0.1.0",
+    "description":  "Route tasks to project skill bundles with /maestro, refresh bundle keywords with /maestro-fetch, and change the saved bundle folder with /maestro-switch.",
+    "author":  {
+                   "name":  "Alisson"
+               },
+    "license":  "MIT",
+    "keywords":  [
+                     "skills",
+                     "orchestration",
+                     "bundles",
+                     "codex"
+                 ],
+    "skills":  "./skills/",
+    "interface":  {
+                      "displayName":  "Maestro",
+                      "shortDescription":  "Route tasks to skill bundles.",
+                      "longDescription":  "Maestro chooses the right skill bundle for a task from a saved user-provided folder, can refresh its bundle keyword index, and can switch the saved bundle folder.",
+                      "developerName":  "Alisson",
+                      "category":  "Productivity",
+                      "capabilities":  [
+                                           "Read",
+                                           "Write"
+                                       ],
+                      "defaultPrompt":  [
+                                            "Use $maestro to route this task to the right skill bundle.",
+                                            "Use $maestro-fetch to refresh bundle keywords from my saved skill-bundle-folder.",
+                                            "Use $maestro-switch to change my skill-bundle-folder."
+                                        ],
+                      "brandColor":  "#2563EB"
+                  }
+}

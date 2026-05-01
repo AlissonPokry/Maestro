@@ -1,0 +1,5 @@
+﻿---
+description = "Refresh Maestro's known skill-bundle index"
+prompt = "Use Maestro from ./maestro/SKILL.md. Run the /maestro-fetch workflow for {{args}}. If {{args}} includes a path, save it as the active skill-bundle-folder; otherwise use the saved path. Update Maestro's Known Bundles section and prune rows for bundles missing from that folder."
+---
+

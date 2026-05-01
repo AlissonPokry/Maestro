@@ -1,0 +1,4 @@
+﻿---
+description = "Route a task through the right Maestro skill bundle"
+prompt = "Use Maestro from ./maestro/SKILL.md. First run `python ./maestro/scripts/maestro_config.py get --skill-file ./maestro/SKILL.md`. If status is missing, ask the user for the skill-bundle-folder path and run /maestro-switch before routing. Then run `python ./maestro/scripts/maestro_route.py --query \"{{args}}\" --skill-file ./maestro/SKILL.md`; read only the returned skill_paths first, then execute the task."
+---
