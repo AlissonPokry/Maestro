@@ -1,39 +1,66 @@
-# Maestro
+# Maestro: A Guide for Beginners
 
-Maestro is a powerful orchestrator for project skill bundles. It intelligently routes tasks to specialized skill folders (such as `Angular-pro`, `Architecture-pro`, `Front-end-expert`, etc.), loading only the relevant context for AI agents (Codex, Claude, Cursor, Gemini).
+Welcome to **Maestro**! If you use AI agents (like Cursor, Claude, or Gemini) to write code and want them to be *smarter* and *faster*, you are in the right place.
 
-## Purpose
+Maestro is like a traffic cop for your AI's instructions. Instead of confusing your AI with rules for *every* programming language at once, Maestro looks at what you want to do and gives the AI **only the rules it needs right now**. 
 
-The primary goal of Maestro is to optimize agent memory and token usage by dynamically loading the precise instructions, resources, and configurations needed for a specific task. Rather than stuffing all guidelines into a single prompt, Maestro reads the user request, resolves the most applicable skill bundle, and injects only those rules into the agent's context.
+This saves tokens (which saves money and memory) and keeps the AI focused.
 
-## Key Features
+---
 
-- **Dynamic Task Routing:** Automatically selects the right skill bundle using the `maestro_route.py` resolver.
-- **Token Optimization:** Loads only necessary files (`SKILL.md`, `README.md`, `.skill`) instead of flooding context.
-- **Saved Bundle Roots:** Persists the active skill folder path across sessions for seamless workflows.
-- **Auto-Discovery:** Scans folders to infer keywords and maintain an up-to-date `Known Bundles` index.
+## 🗺️ How it Works (The Folder Structure)
 
-## Commands
+For Maestro to work, you need a main folder where you keep all your "Skill Bundles". A Skill Bundle is just a folder containing a group of skills for a specific topic, like Angular or Python. The bundles can have the name you want to give them, the main folder name is also up to you.
 
-- `/maestro`: Route a task through the best matching skill bundle.
-- `/maestro-switch <skill-bundle-folder>`: Change Maestro's saved bundle folder path.
-- `/maestro-stats`: Show the selected folder and the current `Known Bundles` index.
-- `/maestro-fetch`: Refresh and update the bundle index from the configured folder.
+So let's say you are building a landing page, you can have folders in you main folder such as "Front-end-dev", "Tailwind-expert" and "Angular-pro", in which each of these folders have skills related to what says in their names, Maestro will look at your prompt and decide which bundles he will use to help you build your landing page.
 
-## Getting Started
+Here is how your **skill-bundles-folder** needs to be organized:
 
-1. Place Maestro inside your project.
-2. Ensure you have a folder with skill bundles (e.g., `MaestroTest/Angular-pro`).
-3. Run `/maestro` or `/maestro-switch <path>` to set your `skill-bundle-folder`.
-4. Ask your AI to perform tasks, and Maestro will orchestrate the underlying skills.
+```text
+📁 My-Skill-Bundles/                <-- "skill-bundle-folder"
+│
+├── 📁 Angular-pro/                 <-- A "Skill Bundle"
+│   ├── 📁 Angular-guidelines       <-- Skill folder
+│   │   └── 📄 SKILL.md
+│   ├── 📁 [ANOTHER SKILL]
+│   ...
+│
+├── 📁 Back-end-expert/             <-- Another "Skill Bundle"
+│
+├── 📁 Python-god/                  <-- Another "Skill Bundle"
+... ├── 📁 Python-best-practices
+    ├── 📁 Python-lib-master
+    ...
+```
+---
 
-## Supported Bundles (Example)
 
-- `Angular-pro`: Advanced Angular 19+ architecture, zoneless, signals.
-- `Architecture-pro`: System design, workflows, analyzer tools.
-- `Back-end-expert`: APIs, microservices, Prisma, security.
-- `Front-end-expert`: Next.js, React, performance, testing.
-- `Python-pro`: FastAPI, Django, modern packaging.
-- `Seo-pro`: SEO audits, E-E-A-T, DataForSEO strategy.
-- `Tailwind-pro`: Advanced design systems, Oklch, custom extraction.
-- `Web-designer`: Aesthetics, UI/UX, animations, layout structures.
+## 🚀 Maestro guide
+
+### Step 1: Installation
+1. Place the `Maestro` project inside your current project **OR** set it globally in your AI environment.
+2. Make sure you have a folder set up somewhere on your computer that looks like the `My-Skill-Bundles/` example above.
+
+### Step 2: Tell Maestro Where Your Skills Are
+The first time you use Maestro, you need to tell it where your skills folder is.
+1. Open your AI chat.
+2. Type: `/maestro-switch <path-to-your-skill-bundle-folder>`
+   *Example: `/maestro-switch C:\Users\Alisson\My-Skill-Bundles`*
+3. Maestro will scan that folder and memorize all the skills you have.
+
+### Step 3: Ask the AI to Do Work!
+Now, just start your prompts with `/maestro`. 
+1. Open your AI chat.
+2. Type: `/maestro Please create a new login page in Angular.`
+3. Maestro will see the word "Angular", go to your `Angular-pro` folder, read *only* those rules, and then write the code!
+
+---
+
+## 🛠️ The Commands Cheat Sheet
+
+Here are the commands you can type to your AI to control Maestro:
+
+- **`/maestro <your task>`**: This is the main command. Use it whenever you want the AI to do a task using your skills.
+- **`/maestro-switch <folder-path>`**: Use this if you move your skills folder to a new location, or want to switch to a different skills folder.
+- **`/maestro-fetch`**: Use this if you add a new skill bundle, or a skill inside an already existing bundle, or even if you delete a bundle/skill and want Maestro to update its index to know about it.
+- **`/maestro-stats`**: Use this to see which folder Maestro is currently using, and a list of all the skills it knows about.
