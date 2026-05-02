@@ -1,0 +1,22 @@
+{
+  "name": "maestro-ai",
+  "version": "1.0.0",
+  "description": "Dynamic skill bundle manager for AI coding assistants",
+  "bin": {
+    "maestro": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "cursor",
+    "claude",
+    "gemini",
+    "antigravity",
+    "skills",
+    "prompts"
+  ],
+  "author": "AlissonPokry",
+  "license": "MIT"
+}
