@@ -1,7 +1,8 @@
-﻿# Maestro: A Guide for Beginners
+﻿# Maestro
 
 Welcome to **Maestro**! If you use AI agents (like Cursor, Claude, or Gemini) to write code and want them to be *smarter* and *faster*, you are in the right place.
 
+Maestro is like a, well... maestro for your AI's instructions' orchestra. Instead of confusing your AI with rules for *every* programming language at once, Maestro looks at what you want to do and gives the AI **only the rules it needs right now**. 
 Maestro is like a, well... maestro for your AI's instructions' orchestra. Instead of confusing your AI with rules for *every* programming language at once, Maestro looks at what you want to do and gives the AI **only the rules it needs right now**. 
 
 This saves tokens (which saves money and memory) and keeps the AI focused.
