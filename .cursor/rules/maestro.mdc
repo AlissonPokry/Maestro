@@ -3,7 +3,8 @@ description: "Maestro routes /maestro tasks to project skill bundles, refreshes 
 alwaysApply: true
 ---
 
-When user invokes `/maestro`, `/maestro-fetch`, `/maestro-switch`, or `/maestro-stats`, read and follow `maestro/SKILL.md`.
+When user invokes `/maestro`, `/maestro-fetch`, `/maestro-switch`, `/maestro-stats`, or `/maestro switch|fetch|stats`, read and follow `maestro/SKILL.md`.
 
 Use `maestro/SKILL.md` as source of truth. Do not duplicate bundle-routing behavior here.
+
 

@@ -293,9 +293,13 @@ def route(args: argparse.Namespace) -> Dict[str, object]:
         "bundle_root": str(bundle_root),
         "query_terms": sorted(query_terms),
         "status": "matched",
+        "terminology": {
+            "bundle": "Immediate child folder of the selected skill-bundle-folder. Example: Angular-pro. A bundle is not a skill.",
+            "skill": "Concrete SKILL.md file inside a selected bundle. Report these when the user asks which skills were used.",
+        },
         "selected_bundles": selected,
         "other_candidates": [item for item in positives if item not in selected][: args.max_candidates],
-        "agent_instruction": "Read only selected_bundles[].skill_paths first. Open more files only if those instructions require it.",
+        "agent_instruction": "Read only selected_bundles[].skill_paths first. selected_bundles[].bundle are bundles, not skills. Skills are selected_bundles[].skill_paths[].path. When reporting used skills, list skill_paths, not bundle names.",
     }
     return result
 
@@ -307,10 +311,10 @@ def print_text(result: Dict[str, object]) -> None:
         return
     print(f"query: {result.get('query')}")
     for bundle in result.get("selected_bundles", []):
-        print(f"{bundle['role']}: {bundle['bundle']} score={bundle['score']} matched={', '.join(bundle['matched_terms'])}")
+        print(f"{bundle['role']}_bundle: {bundle['bundle']} score={bundle['score']} matched={', '.join(bundle['matched_terms'])}")
         print(f"  bundle_path: {bundle['bundle_path']}")
         for skill in bundle.get("skill_paths", []):
-            print(f"  skill: {skill['path']} score={skill['score']}")
+            print(f"  skill_file: {skill['path']} score={skill['score']}")
 
 
 def main() -> int:
@@ -342,6 +346,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
 
 

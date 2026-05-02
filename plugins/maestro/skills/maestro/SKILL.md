@@ -9,6 +9,17 @@ description: Orchestrate project skill bundles from a saved user-provided skill-
 
 Route work to the right skill bundle folder, load only the relevant bundle content, and follow the skills inside that bundle. A bundle is an immediate child directory of the user-provided `skill-bundle-folder`.
 
+## Terminology Contract
+
+Use these terms exactly:
+
+- `bundle`: an immediate child folder inside the selected `skill-bundle-folder`, such as `Angular-pro`.
+- `skill`: a concrete `SKILL.md` file found inside a selected bundle, such as `Angular-pro/angular-architecture/SKILL.md`.
+- `Known Bundles`: index of bundles, not index of skills.
+- `selected_bundles[].bundle`: bundle name; never call this a skill.
+- `selected_bundles[].skill_paths[].path`: skill file path; this is what was loaded/used as a skill.
+
+When the user asks which skills Maestro used, list only `selected_bundles[].skill_paths[].path` or their parent skill folder names. You may separately say which bundles were selected.
 ## Agent Entry
 
 For Codex, Claude, Cursor, and Antigravity/Gemini, treat this file as the source of truth. Project entrypoint files may only route `/maestro`, `/maestro-fetch`, `/maestro-switch`, and `/maestro-stats` here; do not duplicate behavior elsewhere unless syncing the same changes back into this file.
@@ -25,6 +36,15 @@ python scripts/maestro_config.py get --skill-file "<path-to-this-SKILL.md>"
 
 After the user provides a path, run `/maestro-switch <skill-bundle-folder>`. After that, `/maestro`, `/maestro-fetch`, and `/maestro-stats` use the saved path until `/maestro-switch` changes it.
 
+## Command Discovery Compatibility
+
+Some agents expose only one slash command per skill name. If `/maestro-switch`, `/maestro-fetch`, or `/maestro-stats` do not appear in the command list, use these aliases through `/maestro`:
+
+- `/maestro switch <skill-bundle-folder>` = `/maestro-switch <skill-bundle-folder>`
+- `/maestro fetch [skill-bundle-folder]` = `/maestro-fetch [skill-bundle-folder]`
+- `/maestro stats` = `/maestro-stats`
+
+When the first word after `/maestro` is `switch`, `fetch`, or `stats`, treat it as the matching Maestro command instead of a normal task route.
 ## Commands
 
 ### `/maestro`
@@ -41,7 +61,7 @@ python scripts/maestro_route.py --query "<user task>" --skill-file "<path-to-thi
 ```
 
 5. If the resolver returns `needs_bundle_root` or `invalid_bundle_root`, ask for a valid path and run `/maestro-switch <skill-bundle-folder>`.
-6. Read only the returned `selected_bundles[].skill_paths` first. Open more bundle files only when those skill files require it.
+6. Read only the returned `selected_bundles[].skill_paths` first. Treat `selected_bundles[].bundle` as bundle names, not skills. Open more bundle files only when those skill files require it.
 7. Select one primary bundle and supporting bundles from the resolver output. Do not manually search all bundles when the resolver returns a clear match.
 8. If the resolver returns `no_match`, inspect only likely candidates inside the saved `skill-bundle-folder`: `SKILL.md`, `README.md`, `*.skill`, `agents/openai.yaml`, and top-level filenames.
 9. If matching remains ambiguous after inspecting candidates, ask one concise clarification with the top choices.
@@ -98,7 +118,7 @@ Use the route resolver internally when the agent only needs bundle and skill pat
 python scripts/maestro_route.py --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
 ```
 
-The resolver requires a saved bundle path unless `--bundle-root` is explicitly passed. The output gives `selected_bundles`, `bundle_path`, `skill_paths`, scores, and matched terms. Treat it as the routing plan for `/maestro`.
+The resolver requires a saved bundle path unless `--bundle-root` is explicitly passed. The output gives `selected_bundles`, `bundle_path`, `skill_paths`, scores, and matched terms. Treat `selected_bundles[].bundle` as bundles and `selected_bundles[].skill_paths[].path` as skills. Treat it as the routing plan for `/maestro`.
 
 ## Keyword Rules
 
@@ -120,6 +140,10 @@ No bundles indexed yet. Run `/maestro-fetch <skill-bundle-folder>`.
 
 ## Failure Handling
 If the bundle path is invalid, say the path cannot be read and ask for a valid folder. If a selected bundle lacks usable instructions, inspect filenames and nearby docs, then proceed with normal engineering judgment while noting the missing bundle guidance.
+
+
+
+
 
 
 

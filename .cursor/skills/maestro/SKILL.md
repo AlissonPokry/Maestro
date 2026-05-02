@@ -1,6 +1,6 @@
-﻿---
+---
 name: maestro
-description: Cursor adapter for Maestro. Use when the user invokes /maestro, /maestro-fetch, /maestro-switch, or /maestro-stats; asks Cursor to route work to a project skill bundle; or wants bundle keywords refreshed from a skill-bundle-folder.
+description: Route work to the right skill bundle. Use when the user invokes /maestro, /maestro-fetch, /maestro-switch, or /maestro-stats.
 ---
 
 # Maestro Cursor Adapter

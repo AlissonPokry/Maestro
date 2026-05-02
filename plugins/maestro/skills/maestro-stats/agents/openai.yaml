@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "maestro-stats"
+  short_description: "show Maestro's selected bundle folder and Known Bundles table"
+  default_prompt: "Show Maestro Known Bundles."

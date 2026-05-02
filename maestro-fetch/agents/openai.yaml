@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "maestro-fetch"
+  short_description: "refresh Maestro's Known Bundles table"
+  default_prompt: "Refresh Maestro Known Bundles."
