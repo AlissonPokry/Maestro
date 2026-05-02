@@ -1,4 +1,4 @@
-﻿---
+---
 name: maestro
 description: Orchestrate project skill bundles from a saved user-provided skill-bundle-folder. Use when the user invokes /maestro, /maestro-fetch, /maestro-switch, or /maestro-stats; asks Codex to choose and use skills from bundle folders such as front-end-expert; or wants bundle names and keywords scanned into Maestro's known bundle index.
 ---
@@ -31,7 +31,7 @@ Maestro uses one saved `skill-bundle-folder` per active `SKILL.md`. The first ti
 Check the saved path with:
 
 ```bash
-python scripts/maestro_config.py get --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_config.js get --skill-file "<path-to-this-SKILL.md>"
 ```
 
 After the user provides a path, run `/maestro-switch <skill-bundle-folder>`. After that, `/maestro`, `/maestro-fetch`, and `/maestro-stats` use the saved path until `/maestro-switch` changes it.
@@ -51,13 +51,13 @@ When the first word after `/maestro` is `switch`, `fetch`, or `stats`, treat it 
 
 Use `/maestro` to execute a task through the best matching skill bundle.
 
-1. Run `maestro_config.py get`. If status is `missing`, ask for the `skill-bundle-folder` path and do not route until the user provides it.
+1. Run `maestro_config.js get`. If status is `missing`, ask for the `skill-bundle-folder` path and do not route until the user provides it.
 2. If the user provides a path during first setup, run `/maestro-switch <skill-bundle-folder>`, then continue.
 3. Extract the user task/request exactly enough to route it.
 4. Run the route resolver from this skill directory:
 
 ```bash
-python scripts/maestro_route.py --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_route.js --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
 ```
 
 5. If the resolver returns `needs_bundle_root` or `invalid_bundle_root`, ask for a valid path and run `/maestro-switch <skill-bundle-folder>`.
@@ -77,8 +77,8 @@ Use `/maestro-switch` to change Maestro's saved `skill-bundle-folder`.
 2. From this skill directory, run:
 
 ```bash
-python scripts/maestro_config.py set "<skill-bundle-folder>" --skill-file "<path-to-this-SKILL.md>"
-python scripts/maestro_fetch.py --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_config.js set "<skill-bundle-folder>" --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_fetch.js --skill-file "<path-to-this-SKILL.md>"
 ```
 
 3. Report the saved path and fetch summary. The fetch refreshes `Known Bundles`, updates the selected bundle-folder line, and prunes rows for bundles missing from the new folder.
@@ -88,7 +88,7 @@ python scripts/maestro_fetch.py --skill-file "<path-to-this-SKILL.md>"
 Use `/maestro-stats` to show the selected `skill-bundle-folder` and the current `Known Bundles` table. It does not estimate token savings.
 
 ```bash
-python scripts/maestro_stats.py --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_stats.js --skill-file "<path-to-this-SKILL.md>"
 ```
 
 Return the script output to the user. If the selected bundle folder is not configured, say that `/maestro-switch <skill-bundle-folder>` is needed before `/maestro` can route tasks.
@@ -101,11 +101,11 @@ Use `/maestro-fetch` to refresh this skill's bundle index.
 2. From this skill directory, run one of:
 
 ```bash
-python scripts/maestro_fetch.py "<skill-bundle-folder>" --skill-file "<path-to-this-SKILL.md>"
-python scripts/maestro_fetch.py --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_fetch.js "<skill-bundle-folder>" --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_fetch.js --skill-file "<path-to-this-SKILL.md>"
 ```
 
-If `python` is unavailable, use any available Python runtime. If no path is saved, ask for the path and run `/maestro-switch <skill-bundle-folder>`. If the script cannot run, manually inspect immediate child bundle folders and update the `Known Bundles` section below.
+If `node` is unavailable, use any available Node.js runtime. If no path is saved, ask for the path and run `/maestro-switch <skill-bundle-folder>`. If the script cannot run, manually inspect immediate child bundle folders and update the `Known Bundles` section below.
 
 3. The script scans immediate child bundle directories, nested sub-skill docs, and file/path name signals, infers keywords, prunes index rows for missing/deleted bundle folders, saves the active bundle path, updates the selected bundle-folder line, and updates only the `Known Bundles` section in this `SKILL.md`.
 4. Review the resulting `SKILL.md` diff. Keep useful manually-added keywords for bundles that still exist unless they are wrong. Use `--keep-missing` only when intentionally preserving references to bundles outside the current folder.
@@ -115,7 +115,7 @@ If `python` is unavailable, use any available Python runtime. If no path is save
 Use the route resolver internally when the agent only needs bundle and skill paths. It returns compact JSON by default. This is not a user-facing command.
 
 ```bash
-python scripts/maestro_route.py --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
+node scripts/maestro_route.js --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
 ```
 
 The resolver requires a saved bundle path unless `--bundle-root` is explicitly passed. The output gives `selected_bundles`, `bundle_path`, `skill_paths`, scores, and matched terms. Treat `selected_bundles[].bundle` as bundles and `selected_bundles[].skill_paths[].path` as skills. Treat it as the routing plan for `/maestro`.
