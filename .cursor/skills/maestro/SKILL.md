@@ -10,13 +10,13 @@ Read and follow `../../../maestro/SKILL.md`.
 For `/maestro-fetch`, run the script from the source skill. With no path, it uses the saved bundle folder; with a path, it saves that path:
 
 ```bash
-python ../../../maestro/scripts/maestro_fetch.py "<skill-bundle-folder>" --skill-file ../../../maestro/SKILL.md
+node ../../../maestro/scripts/maestro_fetch.js "<skill-bundle-folder>" --skill-file ../../../maestro/SKILL.md
 ```
 
 
 For `/maestro-set`, run:
 
 ```bash
-python ../../../maestro/scripts/maestro_config.py set "<skill-bundle-folder>" --skill-file ../../../maestro/SKILL.md
-python ../../../maestro/scripts/maestro_fetch.py --skill-file ../../../maestro/SKILL.md
+node ../../../maestro/scripts/maestro_config.js set "<skill-bundle-folder>" --skill-file ../../../maestro/SKILL.md
+node ../../../maestro/scripts/maestro_fetch.js --skill-file ../../../maestro/SKILL.md
 ```

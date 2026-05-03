@@ -1,2 +1,2 @@
 description = "Change Maestro's saved skill-bundle-folder"
-prompt = "Use Maestro from ./maestro/SKILL.md. Run the /maestro-set workflow for {{args}}. If {{args}} is empty, ask for the new skill-bundle-folder path. Save it with `python ./maestro/scripts/maestro_config.py set \"<path>\" --skill-file ./maestro/SKILL.md`, then refresh with `python ./maestro/scripts/maestro_fetch.py --skill-file ./maestro/SKILL.md`."
+prompt = "Use Maestro from ./maestro/SKILL.md. Run the /maestro-set workflow for {{args}}. If {{args}} is empty, ask for the new skill-bundle-folder path. Save it with `node ./maestro/scripts/maestro_config.js set \"<path>\" --skill-file ./maestro/SKILL.md`, then refresh with `node ./maestro/scripts/maestro_fetch.js --skill-file ./maestro/SKILL.md`."
