@@ -1,5 +1,5 @@
 {
-  "name": "maestro-ai",
+  "name": "@alissonpokry/maestro",
   "version": "1.0.0",
   "description": "Dynamic skill bundle manager for AI coding assistants",
   "bin": {

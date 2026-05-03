@@ -21,6 +21,8 @@ const PATH_SIGNAL_SUFFIXES = new Set([...TEXT_SUFFIXES, ".csv", ".tsv"]);
 const SKIP_DIRS            = new Set([".git", ".hg", ".svn", "__pycache__", "node_modules", "dist", "build", ".next"]);
 const MAX_DISCOVERY_FILES     = 48;
 const MAX_PATH_SIGNAL_FILES   = 240;
+const MIN_KEYWORDS            = 10;
+const MAX_MERGED_KEYWORDS     = 36;
 const DOMAIN_SUFFIXES         = [".com", ".org", ".net", ".io", ".dev", ".app"];
 
 const STOPWORDS = new Set([
@@ -66,6 +68,37 @@ function words(text) {
     result.push(token);
   }
   return result;
+}
+
+function cleanKeyword(keyword) {
+  const cleaned = String(keyword || "")
+    .toLowerCase()
+    .replace(/^[-_.\s]+|[-_.\s]+$/g, "")
+    .replace(/\s+/g, "-");
+  if (cleaned.length < 3 || STOPWORDS.has(cleaned)) return "";
+  if (DOMAIN_SUFFIXES.some(s => cleaned.endsWith(s))) return "";
+  return cleaned;
+}
+
+function addScore(score, keyword, weight) {
+  const cleaned = cleanKeyword(keyword);
+  if (!cleaned) return;
+  score[cleaned] = (score[cleaned] || 0) + weight;
+}
+
+function scorePhrase(score, text, weight) {
+  const normalized = String(text || "")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[^A-Za-z0-9+.#_-]+/g, " ")
+    .trim();
+  if (!normalized) return;
+
+  const compact = cleanKeyword(normalized.replace(/\s+/g, "-"));
+  if (compact && compact.includes("-")) addScore(score, compact, weight);
+
+  for (const token of words(normalized.replace(/[-_]/g, " "))) {
+    addScore(score, token, weight);
+  }
 }
 
 function isSkipped(relPath) {
@@ -186,9 +219,7 @@ function scorePath(score, relPath, weight) {
   const parts = relPath.split(path.sep);
   for (const part of parts) {
     const stem = path.parse(part).name;
-    for (const token of words(stem.replace(/-/g, " ").replace(/_/g, " "))) {
-      score[token] = (score[token] || 0) + weight;
-    }
+    scorePhrase(score, stem, weight);
   }
 }
 
@@ -197,14 +228,11 @@ function inferKeywords(bundle, maxKeywords = 32) {
 
   // Bundle folder name
   const bundleName = path.basename(bundle).toLowerCase();
-  score[bundleName] = (score[bundleName] || 0) + 14;
-  const nameText = path.basename(bundle).replace(/-/g, " ").replace(/_/g, " ");
-  for (const token of words(nameText)) {
-    score[token] = (score[token] || 0) + 8;
-  }
+  addScore(score, bundleName, 14);
+  scorePhrase(score, path.basename(bundle), 12);
   for (const part of path.basename(bundle).toLowerCase().split(/[-_\s]+/)) {
     if (part && part.length >= 3 && !STOPWORDS.has(part)) {
-      score[part] = (score[part] || 0) + 10;
+      addScore(score, part, 10);
     }
   }
 
@@ -216,9 +244,7 @@ function inferKeywords(bundle, maxKeywords = 32) {
       let weight;
       try { weight = fs.statSync(full).isDirectory() ? 6 : 3; } catch { weight = 3; }
       const stem = path.parse(child).name;
-      for (const token of words(stem.replace(/-/g, " ").replace(/_/g, " "))) {
-        score[token] = (score[token] || 0) + weight;
-      }
+      scorePhrase(score, stem, weight);
     }
   } catch { /* skip */ }
 
@@ -230,35 +256,75 @@ function inferKeywords(bundle, maxKeywords = 32) {
   // Discovery files content
   for (const p of discoveryFiles(bundle)) {
     const rel = path.relative(bundle, p).replace(/\\/g, "/");
-    for (const token of words(rel.replace(/\//g, " ").replace(/-/g, " ").replace(/_/g, " "))) {
-      score[token] = (score[token] || 0) + 2;
-    }
+    scorePath(score, rel, 2);
     const text = readText(p);
     const fmMatch = text.match(/^---\s*([\s\S]*?)\s*---/m);
     if (fmMatch) {
       for (const token of words(fmMatch[1])) {
-        score[token] = (score[token] || 0) + 5;
+        addScore(score, token, 5);
       }
     }
     const headings = text.match(/^#{1,3}\s+(.+)$/gm) || [];
     for (const heading of headings) {
-      for (const token of words(heading.replace(/^#{1,3}\s+/, ""))) {
-        score[token] = (score[token] || 0) + 4;
-      }
+      scorePhrase(score, heading.replace(/^#{1,3}\s+/, ""), 4);
     }
     const commands = text.match(/`(\/?[A-Za-z0-9_.:-]+)`/g) || [];
     for (const cmd of commands) {
-      for (const token of words(cmd.replace(/`/g, ""))) {
-        score[token] = (score[token] || 0) + 4;
-      }
+      scorePhrase(score, cmd.replace(/`/g, ""), 4);
     }
     for (const token of words(text.slice(0, 6000))) {
-      score[token] = (score[token] || 0) + 1;
+      addScore(score, token, 1);
     }
   }
 
   const ranked = Object.entries(score).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   return ranked.slice(0, maxKeywords).map(([token]) => token);
+}
+
+function normalizeKeywords(keywords) {
+  const result = [];
+  const seen = new Set();
+  for (const keyword of keywords || []) {
+    const cleaned = cleanKeyword(keyword);
+    if (!cleaned || seen.has(cleaned)) continue;
+    seen.add(cleaned);
+    result.push(cleaned);
+  }
+  return result;
+}
+
+function padKeywords(keywords, bundleName, minKeywords = MIN_KEYWORDS) {
+  const padded = normalizeKeywords(keywords);
+  const seen = new Set(padded);
+  const bases = normalizeKeywords([bundleName, ...String(bundleName || "").split(/[-_\s]+/)]);
+  const base = bases[0] || "bundle";
+  const suffixes = [
+    "workflow", "patterns", "reference", "tools", "automation",
+    "configuration", "commands", "routing", "docs", "usage", "setup", "examples",
+  ];
+
+  for (const suffix of suffixes) {
+    if (padded.length >= minKeywords) break;
+    const keyword = cleanKeyword(`${base}-${suffix}`);
+    if (!keyword || seen.has(keyword)) continue;
+    seen.add(keyword);
+    padded.push(keyword);
+  }
+
+  return padded;
+}
+
+function mergeKeywords(existingKeywords, inferredKeywords, bundleName = "", minKeywords = MIN_KEYWORDS, maxKeywords = MAX_MERGED_KEYWORDS) {
+  const merged = normalizeKeywords(existingKeywords);
+  const seen = new Set(merged);
+
+  for (const keyword of normalizeKeywords(inferredKeywords)) {
+    if (seen.has(keyword)) continue;
+    seen.add(keyword);
+    merged.push(keyword);
+  }
+
+  return padKeywords(merged, bundleName, minKeywords).slice(0, Math.max(minKeywords, maxKeywords));
 }
 
 // ── Known Bundles section parsing & rendering ────────────────────────
@@ -272,9 +338,7 @@ function parseExisting(block) {
     if (cells.length < 3) continue;
     const [name, keywordText, rawPath] = cells;
     if (!name) continue;
-    const keywords = keywordText.split(",")
-      .map(k => k.trim())
-      .filter(k => k && !STOPWORDS.has(k.toLowerCase()) && !DOMAIN_SUFFIXES.some(s => k.toLowerCase().endsWith(s)));
+    const keywords = normalizeKeywords(keywordText.split(","));
     rows[name] = [keywords, rawPath.replace(/`/g, "")];
   }
   return rows;
@@ -316,7 +380,7 @@ function renderIndex(rows) {
   ];
   for (const name of names) {
     const [keywords, p] = rows[name];
-    const cleanKeywords = [...new Map(keywords.map(k => [k, k])).values()].join(", ");
+    const cleanKeywords = normalizeKeywords(keywords).join(", ");
     const escapedPath = p.replace(/\|/g, "\\|");
     lines.push(`| ${name} | ${cleanKeywords} | \`${escapedPath}\` |`);
   }
@@ -360,10 +424,7 @@ function updateSkill(skillFile, bundleRoot, keepMissing = false) {
     try { if (!fs.statSync(bundlePath).isDirectory() || entry.startsWith(".")) continue; } catch { continue; }
     const inferred = inferKeywords(bundlePath);
     const [existingKeywords] = rows[entry] || [[], ""];
-    const mergedMap = new Map();
-    for (const k of existingKeywords) mergedMap.set(k, true);
-    for (const k of inferred) mergedMap.set(k, true);
-    const mergedKeywords = [...mergedMap.keys()].slice(0, 36);
+    const mergedKeywords = mergeKeywords(existingKeywords, inferred, entry);
     scannedRows[entry] = [mergedKeywords, path.resolve(bundlePath)];
   }
 
@@ -439,7 +500,7 @@ module.exports = {
   discoveryFiles, pathSignalFiles, inferKeywords, parseExisting, renderBundleRoot,
   knownBundlesBounds, knownBundlesBlock, renderIndex, renderKnownBundlesSection,
   setKnownBundlesSection, setBundleRootBlock, updateBundleRootBlock, updateSkill,
-  STOPWORDS, DOMAIN_SUFFIXES,
+  normalizeKeywords, padKeywords, mergeKeywords, STOPWORDS, DOMAIN_SUFFIXES, MIN_KEYWORDS,
 };
 
 if (require.main === module) {
