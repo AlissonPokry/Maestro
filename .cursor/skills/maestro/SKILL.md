@@ -1,6 +1,6 @@
 ---
 name: maestro
-description: Route work to the right skill bundle. Use when the user invokes /maestro, /maestro-fetch, /maestro-switch, or /maestro-stats.
+description: Route work to the right skill bundle. Use when the user invokes /maestro, /maestro-fetch, /maestro-set, or /maestro-stats.
 ---
 
 # Maestro Cursor Adapter
@@ -14,7 +14,7 @@ python ../../../maestro/scripts/maestro_fetch.py "<skill-bundle-folder>" --skill
 ```
 
 
-For `/maestro-switch`, run:
+For `/maestro-set`, run:
 
 ```bash
 python ../../../maestro/scripts/maestro_config.py set "<skill-bundle-folder>" --skill-file ../../../maestro/SKILL.md

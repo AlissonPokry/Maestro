@@ -1,6 +1,6 @@
 ---
 name: maestro
-description: Orchestrate project skill bundles from a saved user-provided skill-bundle-folder. Use when the user invokes /maestro, /maestro-fetch, /maestro-switch, or /maestro-stats; asks Codex to choose and use skills from bundle folders such as front-end-expert; or wants bundle names and keywords scanned into Maestro's known bundle index.
+description: Orchestrate project skill bundles from a saved user-provided skill-bundle-folder. Use when the user invokes /maestro, /maestro-fetch, /maestro-set, or /maestro-stats; asks Codex to choose and use skills from bundle folders such as front-end-expert; or wants bundle names and keywords scanned into Maestro's known bundle index.
 ---
 
 # Maestro
@@ -22,7 +22,7 @@ Use these terms exactly:
 When the user asks which skills Maestro used, list only `selected_bundles[].skill_paths[].path` or their parent skill folder names. You may separately say which bundles were selected.
 ## Agent Entry
 
-For Codex, Claude, Cursor, and Antigravity/Gemini, treat this file as the source of truth. Project entrypoint files may only route `/maestro`, `/maestro-fetch`, `/maestro-switch`, and `/maestro-stats` here; do not duplicate behavior elsewhere unless syncing the same changes back into this file.
+For Codex, Claude, Cursor, and Antigravity/Gemini, treat this file as the source of truth. Project entrypoint files may only route `/maestro`, `/maestro-fetch`, `/maestro-set`, and `/maestro-stats` here; do not duplicate behavior elsewhere unless syncing the same changes back into this file.
 
 ## Bundle Folder Memory
 
@@ -34,13 +34,13 @@ Check the saved path with:
 node scripts/maestro_config.js get --skill-file "<path-to-this-SKILL.md>"
 ```
 
-After the user provides a path, run `/maestro-switch <skill-bundle-folder>`. After that, `/maestro`, `/maestro-fetch`, and `/maestro-stats` use the saved path until `/maestro-switch` changes it.
+After the user provides a path, run `/maestro-set <skill-bundle-folder>`. After that, `/maestro`, `/maestro-fetch`, and `/maestro-stats` use the saved path until `/maestro-set` changes it.
 
 ## Command Discovery Compatibility
 
-Some agents expose only one slash command per skill name. If `/maestro-switch`, `/maestro-fetch`, or `/maestro-stats` do not appear in the command list, use these aliases through `/maestro`:
+Some agents expose only one slash command per skill name. If `/maestro-set`, `/maestro-fetch`, or `/maestro-stats` do not appear in the command list, use these aliases through `/maestro`:
 
-- `/maestro switch <skill-bundle-folder>` = `/maestro-switch <skill-bundle-folder>`
+- `/maestro switch <skill-bundle-folder>` = `/maestro-set <skill-bundle-folder>`
 - `/maestro fetch [skill-bundle-folder]` = `/maestro-fetch [skill-bundle-folder]`
 - `/maestro stats` = `/maestro-stats`
 
@@ -52,7 +52,7 @@ When the first word after `/maestro` is `switch`, `fetch`, or `stats`, treat it 
 Use `/maestro` to execute a task through the best matching skill bundle.
 
 1. Run `maestro_config.js get`. If status is `missing`, ask for the `skill-bundle-folder` path and do not route until the user provides it.
-2. If the user provides a path during first setup, run `/maestro-switch <skill-bundle-folder>`, then continue.
+2. If the user provides a path during first setup, run `/maestro-set <skill-bundle-folder>`, then continue.
 3. Extract the user task/request exactly enough to route it.
 4. Run the route resolver from this skill directory:
 
@@ -60,7 +60,7 @@ Use `/maestro` to execute a task through the best matching skill bundle.
 node scripts/maestro_route.js --query "<user task>" --skill-file "<path-to-this-SKILL.md>"
 ```
 
-5. If the resolver returns `needs_bundle_root` or `invalid_bundle_root`, ask for a valid path and run `/maestro-switch <skill-bundle-folder>`.
+5. If the resolver returns `needs_bundle_root` or `invalid_bundle_root`, ask for a valid path and run `/maestro-set <skill-bundle-folder>`.
 6. Read only the returned `selected_bundles[].skill_paths` first. Treat `selected_bundles[].bundle` as bundle names, not skills. Open more bundle files only when those skill files require it.
 7. Select one primary bundle and supporting bundles from the resolver output. Do not manually search all bundles when the resolver returns a clear match.
 8. If the resolver returns `no_match`, inspect only likely candidates inside the saved `skill-bundle-folder`: `SKILL.md`, `README.md`, `*.skill`, `agents/openai.yaml`, and top-level filenames.
@@ -69,9 +69,9 @@ node scripts/maestro_route.js --query "<user task>" --skill-file "<path-to-this-
 
 Prefer explicit user bundle names over inferred keywords. Prefer high-signal files over bulk reading. Never load every bundle unless the user asks for a full audit.
 
-### `/maestro-switch`
+### `/maestro-set`
 
-Use `/maestro-switch` to change Maestro's saved `skill-bundle-folder`.
+Use `/maestro-set` to change Maestro's saved `skill-bundle-folder`.
 
 1. Get the new `skill-bundle-folder` path from the command args. If absent, ask for it.
 2. From this skill directory, run:
@@ -91,7 +91,7 @@ Use `/maestro-stats` to show the selected `skill-bundle-folder` and the current 
 node scripts/maestro_stats.js --skill-file "<path-to-this-SKILL.md>"
 ```
 
-Return the script output to the user. If the selected bundle folder is not configured, say that `/maestro-switch <skill-bundle-folder>` is needed before `/maestro` can route tasks.
+Return the script output to the user. If the selected bundle folder is not configured, say that `/maestro-set <skill-bundle-folder>` is needed before `/maestro` can route tasks.
 
 ### `/maestro-fetch`
 
@@ -105,7 +105,7 @@ node scripts/maestro_fetch.js "<skill-bundle-folder>" --skill-file "<path-to-thi
 node scripts/maestro_fetch.js --skill-file "<path-to-this-SKILL.md>"
 ```
 
-If `node` is unavailable, use any available Node.js runtime. If no path is saved, ask for the path and run `/maestro-switch <skill-bundle-folder>`. If the script cannot run, manually inspect immediate child bundle folders and update the `Known Bundles` section below.
+If `node` is unavailable, use any available Node.js runtime. If no path is saved, ask for the path and run `/maestro-set <skill-bundle-folder>`. If the script cannot run, manually inspect immediate child bundle folders and update the `Known Bundles` section below.
 
 3. The script scans immediate child bundle directories, nested sub-skill docs, and file/path name signals, infers keywords, prunes index rows for missing/deleted bundle folders, saves the active bundle path, updates the selected bundle-folder line, and updates only the `Known Bundles` section in this `SKILL.md`.
 4. Review the resulting `SKILL.md` diff. Keep useful manually-added keywords for bundles that still exist unless they are wrong. Use `--keep-missing` only when intentionally preserving references to bundles outside the current folder.
@@ -134,7 +134,7 @@ Build keyword evidence from:
 Use compact keyword lists. Avoid generic terms such as `skill`, `task`, `guide`, `help`, `project`, `folder`, `agent`, and `codex` unless they disambiguate a bundle.
 
 ## Known Bundles
-Selected bundle folder: Not configured. Run `/maestro-switch <skill-bundle-folder>`.
+Selected bundle folder: Not configured. Run `/maestro-set <skill-bundle-folder>`.
 
 No bundles indexed yet. Run `/maestro-fetch <skill-bundle-folder>`.
 

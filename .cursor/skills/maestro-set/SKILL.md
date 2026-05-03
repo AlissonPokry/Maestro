@@ -1,9 +1,9 @@
 ---
-name: maestro-switch
+name: maestro-set
 description: Change Maestro's saved skill-bundle-folder. Delegates to the main Maestro skill.
 ---
 
-# maestro-switch
+# maestro-set
 
 Read and follow ../../../maestro/SKILL.md, section $(System.Collections.Hashtable.Section).
 

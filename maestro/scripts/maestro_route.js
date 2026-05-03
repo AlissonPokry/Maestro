@@ -276,7 +276,7 @@ function route(opts) {
     return {
       query: opts.query,
       status: "needs_bundle_root",
-      message: "Bundle folder not configured. Ask the user for the skill-bundle-folder path, then run /maestro-switch <path>.",
+      message: "Bundle folder not configured. Ask the user for the skill-bundle-folder path, then run /maestro-set <path>.",
     };
   }
   try { if (!fs.statSync(bundleRoot).isDirectory()) throw new Error(); } catch {
@@ -284,7 +284,7 @@ function route(opts) {
       query: opts.query,
       status: "invalid_bundle_root",
       bundle_root: bundleRoot,
-      message: "Saved bundle folder cannot be read. Ask for a valid path or run /maestro-switch <path>.",
+      message: "Saved bundle folder cannot be read. Ask for a valid path or run /maestro-set <path>.",
     };
   }
 
@@ -297,7 +297,7 @@ function route(opts) {
       query: opts.query,
       status: "no_index",
       bundle_root: bundleRoot,
-      message: "No bundle folders found. Run /maestro-fetch or /maestro-switch with a folder containing bundle directories.",
+      message: "No bundle folders found. Run /maestro-fetch or /maestro-set with a folder containing bundle directories.",
     };
   }
 

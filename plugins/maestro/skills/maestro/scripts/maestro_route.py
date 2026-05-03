@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Resolve a user request to Maestro bundle and sub-skill paths."""
 
 from __future__ import annotations
@@ -245,14 +245,14 @@ def route(args: argparse.Namespace) -> Dict[str, object]:
         return {
             "query": args.query,
             "status": "needs_bundle_root",
-            "message": "Bundle folder not configured. Ask the user for the skill-bundle-folder path, then run /maestro-switch <path>.",
+            "message": "Bundle folder not configured. Ask the user for the skill-bundle-folder path, then run /maestro-set <path>.",
         }
     if not bundle_root.is_dir():
         return {
             "query": args.query,
             "status": "invalid_bundle_root",
             "bundle_root": str(bundle_root),
-            "message": "Saved bundle folder cannot be read. Ask for a valid path or run /maestro-switch <path>.",
+            "message": "Saved bundle folder cannot be read. Ask for a valid path or run /maestro-set <path>.",
         }
 
     rows = filter_rows_by_root(parse_index(skill_file), bundle_root)
@@ -263,7 +263,7 @@ def route(args: argparse.Namespace) -> Dict[str, object]:
             "query": args.query,
             "status": "no_index",
             "bundle_root": str(bundle_root),
-            "message": "No bundle folders found. Run /maestro-fetch or /maestro-switch with a folder containing bundle directories.",
+            "message": "No bundle folders found. Run /maestro-fetch or /maestro-set with a folder containing bundle directories.",
         }
 
     query_terms = set(expand_terms(args.query))

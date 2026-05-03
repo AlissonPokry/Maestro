@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Update Maestro's known bundle index from a skill-bundle-folder."""
 
 from __future__ import annotations
@@ -308,7 +308,7 @@ def parse_existing(block: str) -> Dict[str, Tuple[List[str], str]]:
 
 def render_bundle_root(bundle_root: pathlib.Path = None) -> str:
     if bundle_root is None:
-        return "Selected bundle folder: Not configured. Run `/maestro-switch <skill-bundle-folder>`."
+        return "Selected bundle folder: Not configured. Run `/maestro-set <skill-bundle-folder>`."
     return f"Selected bundle folder: `{str(bundle_root.expanduser().resolve())}`"
 
 
@@ -422,7 +422,7 @@ def main() -> int:
     else:
         bundle_root = load_saved_bundle_root(skill_file)
         if bundle_root is None:
-            raise SystemExit("bundle root not configured. Run /maestro-switch <skill-bundle-folder> or pass bundle_root.")
+            raise SystemExit("bundle root not configured. Run /maestro-set <skill-bundle-folder> or pass bundle_root.")
 
     if not bundle_root.is_dir():
         raise SystemExit(f"bundle root not readable: {bundle_root}")

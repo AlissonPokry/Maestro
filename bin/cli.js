@@ -44,7 +44,7 @@ if (command === 'uninstall') {
     }
 
     const skillsDestBase = isGlobal ? path.join(targetBaseDir, envConfig.skillsDir) : targetBaseDir;
-    const coreSkills = ['maestro', 'maestro-fetch', 'maestro-stats', 'maestro-switch'];
+    const coreSkills = ['maestro', 'maestro-fetch', 'maestro-stats', 'maestro-set'];
     
     coreSkills.forEach(skill => {
       const dest = path.join(skillsDestBase, skill);
@@ -110,7 +110,7 @@ selectedEnvs.forEach(env => {
   }
 
   // Copy core skills
-  const coreSkills = ['maestro', 'maestro-fetch', 'maestro-stats', 'maestro-switch'];
+  const coreSkills = ['maestro', 'maestro-fetch', 'maestro-stats', 'maestro-set'];
   // Keep flat so environment slash command parsers can detect them
   const skillsDestBase = isGlobal ? path.join(targetBaseDir, envConfig.skillsDir) : targetBaseDir;
   

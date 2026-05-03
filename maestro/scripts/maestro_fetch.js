@@ -282,7 +282,7 @@ function parseExisting(block) {
 
 function renderBundleRoot(bundleRoot) {
   if (!bundleRoot) {
-    return "Selected bundle folder: Not configured. Run `/maestro-switch <skill-bundle-folder>`.";
+    return "Selected bundle folder: Not configured. Run `/maestro-set <skill-bundle-folder>`.";
   }
   return `Selected bundle folder: \`${path.resolve(bundleRoot)}\``;
 }
@@ -411,7 +411,7 @@ function main() {
   } else {
     bundleRoot = loadSavedBundleRoot(skillFile);
     if (!bundleRoot) {
-      console.error("bundle root not configured. Run /maestro-switch <skill-bundle-folder> or pass bundle_root.");
+      console.error("bundle root not configured. Run /maestro-set <skill-bundle-folder> or pass bundle_root.");
       process.exit(1);
     }
   }

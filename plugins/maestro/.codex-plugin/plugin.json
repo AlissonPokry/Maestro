@@ -1,7 +1,7 @@
-﻿{
+{
     "name":  "maestro",
     "version":  "0.1.0",
-    "description":  "Route tasks to project skill bundles with /maestro, refresh bundle keywords with /maestro-fetch, and change the saved bundle folder with /maestro-switch.",
+    "description":  "Route tasks to project skill bundles with /maestro, refresh bundle keywords with /maestro-fetch, and change the saved bundle folder with /maestro-set.",
     "author":  {
                    "name":  "Alisson"
                },
@@ -26,7 +26,7 @@
                       "defaultPrompt":  [
                                             "Use $maestro to route this task to the right skill bundle.",
                                             "Use $maestro-fetch to refresh bundle keywords from my saved skill-bundle-folder.",
-                                            "Use $maestro-switch to change my skill-bundle-folder."
+                                            "Use $maestro-set to change my skill-bundle-folder."
                                         ],
                       "brandColor":  "#2563EB"
                   }

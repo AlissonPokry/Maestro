@@ -1,4 +1,4 @@
-﻿interface:
-  display_name: "maestro-switch"
+interface:
+  display_name: "maestro-set"
   short_description: "change Maestro's saved skill-bundle-folder"
   default_prompt: "Change Maestro skill-bundle-folder."

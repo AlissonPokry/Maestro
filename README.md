@@ -1,4 +1,4 @@
-﻿# Maestro
+# Maestro
 
 Welcome to **Maestro**! If you use AI agents (like Cursor, Claude, or Gemini) to write code and want them to be *smarter* and *faster*, you are in the right place.
 
@@ -18,25 +18,25 @@ So let's say you are building a landing page, you can have folders in you main f
 Here is how your **skill-bundles-folder** needs to be organized:
 
 ```text
-📁 My-Skill-Bundles/            <-- "skill-bundle-folder"
-│
-├── 📁 Angular-pro/             <-- A "Skill Bundle"
-│   ├── 📁 Angular-guidelines   <-- Skill folder
-│   │   └── 📄 SKILL.md         <-- Skill
-│   ├── 📁 [ANOTHER SKILL]
-│   ...
-│
-├── 📁 Back-end-expert/         <-- Another "Skill Bundle"
-│
-├── 📁 Python-god/              <-- Another "Skill Bundle"
-... ├── 📁 Python-best-practices
-    ├── 📁 Python-lib-master    <-- Skill folder
+?? My-Skill-Bundles/            <-- "skill-bundle-folder"
+�
++-- ?? Angular-pro/             <-- A "Skill Bundle"
+�   +-- ?? Angular-guidelines   <-- Skill folder
+�   �   +-- ?? SKILL.md         <-- Skill
+�   +-- ?? [ANOTHER SKILL]
+�   ...
+�
++-- ?? Back-end-expert/         <-- Another "Skill Bundle"
+�
++-- ?? Python-god/              <-- Another "Skill Bundle"
+... +-- ?? Python-best-practices
+    +-- ?? Python-lib-master    <-- Skill folder
     ...
 ```
 ---
 
 
-## 🚀 Maestro guide
+## ?? Maestro guide
 
 ### Step 1: Installation
 1. Place the `Maestro` project inside your current project **OR** set it globally in your AI environment.
@@ -45,8 +45,8 @@ Here is how your **skill-bundles-folder** needs to be organized:
 ### Step 2: Tell Maestro Where Your Skills Are
 The first time you use Maestro, you need to tell it where your skills folder is.
 1. Open your AI chat.
-2. Type: `/maestro-switch <path-to-your-skill-bundle-folder>`
-   *Example: `/maestro-switch C:\Users\Alisson\My-Skill-Bundles`*
+2. Type: `/maestro-set <path-to-your-skill-bundle-folder>`
+   *Example: `/maestro-set C:\Users\Alisson\My-Skill-Bundles`*
 3. Maestro will scan that folder and memorize all the skills you have.
 
 ### Step 3: Ask the AI to Do Work!
@@ -58,13 +58,13 @@ Now, just start your prompts with `/maestro`.
 ---
 
 
-> If your agent only shows `/maestro`, use `/maestro switch <folder-path>`, `/maestro fetch`, or `/maestro stats`. These are aliases for `/maestro-switch`, `/maestro-fetch`, and `/maestro-stats`.
+> If your agent only shows `/maestro`, use `/maestro switch <folder-path>`, `/maestro fetch`, or `/maestro stats`. These are aliases for `/maestro-set`, `/maestro-fetch`, and `/maestro-stats`.
 ## The Commands Cheat Sheet
 
 Here are the commands you can type to your AI to control Maestro:
 
 - **`/maestro <your task>`**: This is the main command. Use it whenever you want the AI to do a task using your skills.
-- **`/maestro-switch <folder-path>`**: Use this if you move your skills folder to a new location, or want to switch to a different skills folder.
+- **`/maestro-set <folder-path>`**: Use this if you move your skills folder to a new location, or want to switch to a different skills folder.
 - **`/maestro-fetch`**: Use this if you add a new skill bundle, or a skill inside an already existing bundle, or even if you delete a bundle/skill and want Maestro to update its index to know about it.
 - **`/maestro-stats`**: Use this to see which folder Maestro is currently using, and a list of all the skills it knows about.
 
