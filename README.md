@@ -1,70 +1,149 @@
 # Maestro
 
-Welcome to **Maestro**! If you use AI agents (like Cursor, Claude, or Gemini) to write code and want them to be *smarter* and *faster*, you are in the right place.
+[![npm version](https://img.shields.io/npm/v/@alissonpokry/maestro.svg)](https://www.npmjs.com/package/@alissonpokry/maestro)
+[![npm package](https://img.shields.io/badge/npm-@alissonpokry%2Fmaestro-red.svg)](https://www.npmjs.com/package/@alissonpokry/maestro)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Maestro is like a, well... maestro for your AI's instructions' orchestra. Instead of confusing your AI with rules for *every* programming language at once, Maestro looks at what you want to do and gives the AI **only the rules it needs right now**. 
-Maestro is like a, well... maestro for your AI's instructions' orchestra. Instead of confusing your AI with rules for *every* programming language at once, Maestro looks at what you want to do and gives the AI **only the rules it needs right now**. 
+Dynamic skill bundle manager for AI coding assistants.
 
-This saves tokens (which saves money and memory) and keeps the AI focused.
+[Brazilian Portuguese](README.pt-BR.md)
 
----
+Maestro helps agents load the right instructions for the task in front of them. Instead of keeping every language, framework, and workflow rule in the active prompt, Maestro routes the request to a focused bundle of skills and keeps the agent context smaller.
 
-## How it Works (The Folder Structure)
+## Install
 
-For Maestro to work, you need a main folder where you keep all your "Skill Bundles". A Skill Bundle is just a folder containing a group of skills for a specific topic, like Angular or Python. The bundles can have the name you want to give them, the main folder name is also up to you.
+Run the installer directly from npm:
 
-So let's say you are building a landing page, you can have folders in you main folder such as "Front-end-dev", "Tailwind-expert" and "Angular-pro", in which each of these folders have skills related to what says in their names, Maestro will look at your prompt and decide which bundles he will use to help you build your landing page.
+```bash
+npm i @alissonpokry/maestro
+```
 
-Here is how your **skill-bundles-folder** needs to be organized:
+Then execute the installer:
+
+```bash
+npx @alissonpokry/maestro
+```
+
+## Package
+
+| Field | Value |
+| --- | --- |
+| Package | `@alissonpokry/maestro` |
+| Current version | `1.0.3` |
+| npm install | `npm i @alissonpokry/maestro` |
+| npx usage | `npx @alissonpokry/maestro` |
+| CLI binary | `maestro` |
+| License | MIT |
+| Runtime dependencies | None |
+| Node.js | `>=18` |
+
+## What Maestro Does
+
+- Installs slash-command skills for Cursor, Claude, Antigravity/Gemini, and Codex/Agents.
+- Stores one active `skill-bundle-folder` path for Maestro.
+- Scans bundle folders and builds a compact `Known Bundles` index.
+- Routes `/maestro` requests to the best matching bundle and skill files.
+- Provides maintenance commands for switching folders, refreshing the index, and checking current configuration.
+
+## Quick Start
+
+1. Install Maestro in your project or user folder as stated in the install section above.
+
+2. Set your skill bundle folder:
 
 ```text
-?? My-Skill-Bundles/            <-- "skill-bundle-folder"
-¦
-+-- ?? Angular-pro/             <-- A "Skill Bundle"
-¦   +-- ?? Angular-guidelines   <-- Skill folder
-¦   ¦   +-- ?? SKILL.md         <-- Skill
-¦   +-- ?? [ANOTHER SKILL]
-¦   ...
-¦
-+-- ?? Back-end-expert/         <-- Another "Skill Bundle"
-¦
-+-- ?? Python-god/              <-- Another "Skill Bundle"
-... +-- ?? Python-best-practices
-    +-- ?? Python-lib-master    <-- Skill folder
-    ...
+/maestro-set C:\Users\user\Desktop\My-Skill-Bundles
 ```
----
 
+3. Route a task through Maestro:
 
-## ?? Maestro guide
+```text
+/maestro Build a login page in Angular.
+```
 
-### Step 1: Installation
-1. Place the `Maestro` project inside your current project **OR** set it globally in your AI environment.
-2. Make sure you have a folder set up somewhere on your computer that looks like the `My-Skill-Bundles/` example above.
+Maestro checks the request, selects the most relevant bundle, reads only the matched skill instructions, and then continues the task with focused context.
 
-### Step 2: Tell Maestro Where Your Skills Are
-The first time you use Maestro, you need to tell it where your skills folder is.
-1. Open your AI chat.
-2. Type: `/maestro-set <path-to-your-skill-bundle-folder>`
-   *Example: `/maestro-set C:\Users\Alisson\My-Skill-Bundles`*
-3. Maestro will scan that folder and memorize all the skills you have.
+## Installer Options
 
-### Step 3: Ask the AI to Do Work!
-Now, just start your prompts with `/maestro`. 
-1. Open your AI chat.
-2. Type: `/maestro Please create a new login page in Angular.`
-3. Maestro will see the word "Angular", go to your `Angular-pro` folder, read *only* those rules, and then write the code!
+The installer asks for:
 
----
+- Action: installation or uninstallation.
+- Scope: local project or global user folder.
+- AI environment: Cursor, Claude, Antigravity/Gemini, Codex/Agents, or all supported environments.
 
+Local installs place Maestro files into the current project. Global installs place them under the relevant user-level assistant folders.
 
-> If your agent only shows `/maestro`, use `/maestro switch <folder-path>`, `/maestro fetch`, or `/maestro stats`. These are aliases for `/maestro-set`, `/maestro-fetch`, and `/maestro-stats`.
-## The Commands Cheat Sheet
+## Commands
 
-Here are the commands you can type to your AI to control Maestro:
+| Command | Purpose |
+| --- | --- |
+| `/maestro <task>` | Route a task through the best matching bundle. |
+| `/maestro-set <folder-path>` | Save or switch the active `skill-bundle-folder`. |
+| `/maestro-fetch [folder-path]` | Refresh the `Known Bundles` index. |
+| `/maestro-stats` | Show the active bundle folder and indexed bundles. |
 
-- **`/maestro <your task>`**: This is the main command. Use it whenever you want the AI to do a task using your skills.
-- **`/maestro-set <folder-path>`**: Use this if you move your skills folder to a new location, or want to switch to a different skills folder.
-- **`/maestro-fetch`**: Use this if you add a new skill bundle, or a skill inside an already existing bundle, or even if you delete a bundle/skill and want Maestro to update its index to know about it.
-- **`/maestro-stats`**: Use this to see which folder Maestro is currently using, and a list of all the skills it knows about.
+If your agent exposes only `/maestro`, use these aliases:
 
+| Alias | Equivalent command |
+| --- | --- |
+| `/maestro switch <folder-path>` | `/maestro-set <folder-path>` |
+| `/maestro fetch [folder-path]` | `/maestro-fetch [folder-path]` |
+| `/maestro stats` | `/maestro-stats` |
+
+## Skill Bundle Layout
+
+Maestro expects a folder whose direct children are bundles. Each bundle can contain one or more skills, and each skill is represented by a `SKILL.md` file.
+
+```text
+My-Skill-Bundles/
+|
++-- Angular-pro/
+|   +-- angular-architecture/
+|   |   +-- SKILL.md
+|   +-- angular-ui-patterns/
+|       +-- SKILL.md
+|
++-- Python-pro/
+|   +-- python-testing/
+|       +-- SKILL.md
+|
++-- Seo-pro/
+    +-- seo-audit/
+        +-- SKILL.md
+```
+
+In Maestro terminology:
+
+- `skill-bundle-folder` is the folder that contains all bundles.
+- `bundle` is an immediate child folder, such as `Angular-pro`.
+- `skill` is a specific `SKILL.md` inside a bundle.
+
+## Supported Environments
+
+Maestro can install command and skill files for:
+
+- Cursor
+- Claude
+- Antigravity/Gemini
+- Codex/Agents
+
+## Repository Development
+
+This package has no runtime dependencies. The CLI entry point is:
+
+```bash
+bin/cli.js
+```
+
+Useful local commands:
+
+```bash
+node bin/cli.js init
+node bin/cli.js uninstall
+npm test
+npm run pack:dry-run
+```
+
+## License
+
+MIT. See [LICENSE](LICENSE).

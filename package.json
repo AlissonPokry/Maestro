@@ -1,12 +1,41 @@
 {
   "name": "@alissonpokry/maestro",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Dynamic skill bundle manager for AI coding assistants",
+  "main": "bin/cli.js",
   "bin": {
     "maestro": "bin/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run check",
+    "check": "node --check bin/cli.js && node --check maestro/scripts/maestro_config.js && node --check maestro/scripts/maestro_fetch.js && node --check maestro/scripts/maestro_route.js && node --check maestro/scripts/maestro_stats.js && node --check plugins/maestro/skills/maestro/scripts/maestro_config.js && node --check plugins/maestro/skills/maestro/scripts/maestro_fetch.js && node --check plugins/maestro/skills/maestro/scripts/maestro_route.js && node --check plugins/maestro/skills/maestro/scripts/maestro_stats.js && node test/cli-stdin.test.js",
+    "pack:dry-run": "npm pack --dry-run --json"
+  },
+  "files": [
+    ".agents/plugins/marketplace.json",
+    ".claude/",
+    ".claude-plugin/",
+    ".cursor/",
+    ".gemini/",
+    "bin/",
+    "commands/",
+    "maestro/",
+    "maestro-fetch/",
+    "maestro-set/",
+    "maestro-stats/",
+    "plugins/",
+    "test/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "README.pt-BR.md",
+    "gemini-extension.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "keywords": [
     "ai",
@@ -18,5 +47,13 @@
     "prompts"
   ],
   "author": "AlissonPokry",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlissonPokry/maestro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlissonPokry/maestro/issues"
+  },
+  "homepage": "https://github.com/AlissonPokry/maestro#readme"
 }
